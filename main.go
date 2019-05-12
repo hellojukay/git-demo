@@ -4,7 +4,7 @@ import (
 	"os"
 	"fmt"
 	"github.com/urfave/cli"
-	"strings"
+	"github.com/manifoldco/promptui"
 )
 var IGNORE_HOME string
 var app *cli.App
@@ -38,17 +38,24 @@ func init() {
 
 func initAutoComplete(c *cli.Context)  {
 	fmt.Fprintf(c.App.Writer,"Hello \n World")
-	git, err := NewGitRepo("$HOME/.gitignore","")
+	var home , _ =os.UserHomeDir()
+	git, err := NewGitRepo(fmt.Sprintf("%s/.gitignore",home),"")
 	if err != nil {
-		fmt.Fprintf(c.App.ErrWriter,"%s\n",err)
+		fmt.Fprintf(os.Stderr,"%s\n",err.Error())
 		cli.OsExiter(1)
 	}
 	files , err := git.Files()
 	if err != nil {
-		fmt.Fprintf(c.App.ErrWriter,"%s\n",err)
+		fmt.Fprintf(os.Stderr,"%s\n",err)
 		cli.OsExiter(1)
 	}
-	fmt.Fprintf(c.App.Writer,"%s\n",strings.Join(files,"\n"))
+	prompt := promptui.Select{
+		Label: "select ignore template",
+		Items: files,
+	}
+
+	_, result, err := prompt.Run()
+	println(result)
 }
 func main() {
 	app.Run(os.Args)

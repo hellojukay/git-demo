@@ -2,8 +2,7 @@ package main
 
 import (
 	"io/ioutil"
-	 "path/filepath"
-
+	"os"
 )
 // GitRepo git ginore repo:https://github.com/github/gitignore 
 // local path
@@ -14,6 +13,7 @@ type GitRepo struct {
 
 // NewGitRepo create local gitignore repo
 func NewGitRepo(dir string, url string)(*GitRepo,error) {
+	println(dir)
 	// check update
 	return & GitRepo{
 		Dir:dir,
@@ -31,15 +31,23 @@ func readDir(dir string)([]string,error) {
 	}
 	for _, file := range files {
 		if file.IsDir() {
+			if file.Name() == ".git" {
+				continue
+			}
+			if file.Name() == ".github" {
+				continue
+			}
 			// 递归
-			subDir , _ := filepath.Abs(file.Name())
-			subPaths , err := readDir(subDir)
+			path := dir+string(os.PathSeparator)+file.Name()
+			subPaths , err := readDir(path)
 			if err != nil {
 				return nil , err
 			}
 			filePaths = append(filePaths, subPaths...)
+			continue
 		}
-		path ,_ := filepath.Abs(file.Name())
+		path := dir+string(os.PathSeparator)+file.Name()
+		println(path)
 		filePaths = append(filePaths,path)
 	}
 	return filePaths,err
