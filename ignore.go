@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// GitRepo git ginore repo:https://github.com/github/gitignore
+// GitRepo git ginore template repo
 // local path
 type GitRepo struct {
 	Dir string
@@ -62,9 +62,9 @@ func (git *GitRepo) Sync() error {
 }
 
 func cleanFile(path string) {
-	fh , err := os.OpenFile(path,os.O_TRUNC,0666)
+	fh, err := os.OpenFile(path, os.O_TRUNC, 0666)
 	if err != nil {
-		fmt.Fprintf(os.Stderr,"%s\n",err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
 	fh.Close()
