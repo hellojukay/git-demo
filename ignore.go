@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 // GitRepo git ginore template repo
@@ -61,6 +63,26 @@ func (git *GitRepo) Sync() error {
 	return nil
 }
 
+func (git *GitRepo) ReadFile(fileName string) (string, error) {
+	path := git.Dir + string(os.PathSeparator) + "templates" + string(os.PathSeparator) + fileName
+	bytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", nil
+	}
+	return string(bytes), err
+}
+func appendIgnore(content string)error{
+	fh ,err := os.OpenFile(".gitignore",os.O_APPEND|os.O_CREATE,0666)
+	if err != nil {
+		return err
+	}
+	writer := bufio.NewWriter(fh)
+	fmt.Fprintf(writer,"\n #%s \n",time.Now().Format("2006-01-02 15:04:05"))
+	fmt.Fprintf(writer,"%s\n",content)
+	writer.Flush()
+	fh.Close()
+	return nil
+}
 func cleanFile(path string) {
 	fh, err := os.OpenFile(path, os.O_TRUNC, 0666)
 	if err != nil {

@@ -68,7 +68,14 @@ func initIgnore(c *cli.Context) {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		cli.OsExiter(1)
 	}
-	fmt.Printf("you select %s \n",t)
+	content , err := git.ReadFile(t)
+	if err != nil {
+		fmt.Fprintf(os.Stderr,"%s\n",err)
+		cli.OsExiter(1)
+	}
+	appendIgnore(content)
+	println(content)
+	color.Green("%s\n","SUCCESS")
 }
 
 
