@@ -4,7 +4,16 @@ This is a git plugin to add file or dir to gitignore file
 [![Build Status](https://travis-ci.org/hellojukay/git-ignore.svg?branch=master)](https://travis-ci.org/hellojukay/git-ignore)
 
 ## How to Use it
-add a file to ignore
+install with golang
 ```shell
-git ignore a.txt
+go install github.com/hellojukay/git-ignore
+```
+add a git ignore template file
+```shell
+git ignore init
+```
+![demo](demo.gif)
+clean git ignore file
+```shell
+git ignore clean
 ```

@@ -24,7 +24,7 @@ func init() {
 			Action:  initIgnore,
 		},
 		{
-			Name:  "reset",
+			Name:  "clean",
 			Usage: "clean git ignore file",
 			Action: func(ctx *cli.Context) {
 				cleanFile(".gitignore")
