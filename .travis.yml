@@ -1,4 +1,5 @@
 language: go
 go:
   - 1.11.4
-script: go build 
+script:
+  - env GO111MODULE=on go build

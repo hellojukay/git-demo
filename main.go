@@ -40,7 +40,7 @@ func init() {
 }
 
 func initIgnore(c *cli.Context) {
-	var home, _ = os.UserHomeDir()
+	var home = os.Getenv("HOME")
 	git, err := NewGitRepo(fmt.Sprintf("%s/.gitignore", home), "")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())
