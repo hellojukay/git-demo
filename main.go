@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/urfave/cli"
 	prompt "github.com/c-bata/go-prompt"
 	"github.com/fatih/color"
+	"github.com/urfave/cli"
 )
 
 var IGNORE_HOME string
@@ -18,14 +18,14 @@ func init() {
 	app.Usage = "manager git ignore file"
 	app.Commands = []cli.Command{
 		{
-			Name:         "init",
-			Aliases:      []string{"i"},
-			Usage:        "init git ignore file",
-			Action:       initIgnore,
+			Name:    "init",
+			Aliases: []string{"i"},
+			Usage:   "init git ignore file",
+			Action:  initIgnore,
 		},
 		{
-			Name:   "reset",
-			Usage:  "clean git ignore file",
+			Name:  "reset",
+			Usage: "clean git ignore file",
 			Action: func(ctx *cli.Context) {
 				cleanFile(".gitignore")
 				color.Green("%s \n", "SUCCESS")
@@ -51,12 +51,12 @@ func initIgnore(c *cli.Context) {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		cli.OsExiter(1)
 	}
-	t := func()string {
+	t := func() string {
 		var s []prompt.Suggest
 		for _, file := range files {
-			s = append(s,prompt.Suggest{
-				Text:filepath.Base(file),
-				Description:file,
+			s = append(s, prompt.Suggest{
+				Text:        filepath.Base(file),
+				Description: file,
 			})
 		}
 		return prompt.Input(">", func(document prompt.Document) []prompt.Suggest {
@@ -68,16 +68,19 @@ func initIgnore(c *cli.Context) {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		cli.OsExiter(1)
 	}
-	content , err := git.ReadFile(t)
+	content, err := git.ReadFile(t)
 	if err != nil {
-		fmt.Fprintf(os.Stderr,"%s\n",err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		cli.OsExiter(1)
 	}
-	appendIgnore(content)
+	err = appendIgnore(content)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		cli.OsExiter(1)
+	}
 	println(content)
-	color.Green("%s\n","SUCCESS")
+	color.Green("%s\n", "SUCCESS")
 }
-
 
 func main() {
 	app.Run(os.Args)

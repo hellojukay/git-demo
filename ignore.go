@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -71,16 +70,20 @@ func (git *GitRepo) ReadFile(fileName string) (string, error) {
 	}
 	return string(bytes), err
 }
-func appendIgnore(content string)error{
-	fh ,err := os.OpenFile(".gitignore",os.O_APPEND|os.O_CREATE,0666)
+func appendIgnore(content string) error {
+	fh, err := os.OpenFile(".gitignore", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
 		return err
 	}
-	writer := bufio.NewWriter(fh)
-	fmt.Fprintf(writer,"\n #%s \n",time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Fprintf(writer,"%s\n",content)
-	writer.Flush()
-	fh.Close()
+	defer fh.Close()
+	_, err = fh.WriteString(fmt.Sprintf("\n#%s \n", time.Now().Format("2006-01-02 15:04:05")))
+	if err != nil {
+		return err
+	}
+	_, err = fh.WriteString(fmt.Sprintf("%s\n", content))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func cleanFile(path string) {
