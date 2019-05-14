@@ -17,6 +17,8 @@ add a git ignore template file
 git ignore i
 ```
 ![init](init.gif)
+
+
 clean git ignore file
 ```shell
 git ignore clean
